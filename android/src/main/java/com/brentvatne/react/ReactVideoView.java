@@ -160,7 +160,7 @@ public class ReactVideoView extends ScalableVideoView implements
 
                 if (mMediaPlayerValid && !isCompleted && !mPaused && !mBackgroundPaused) {
                     WritableMap event = Arguments.createMap();
-                    event.putDouble(EVENT_PROP_CURRENT_TIME, mMediaPlayer.getCurrentPosition() / 1000.0);
+                    if (mMediaPlayer != null) event.putDouble(EVENT_PROP_CURRENT_TIME, mMediaPlayer.getCurrentPosition() / 1000.0);
                     event.putDouble(EVENT_PROP_PLAYABLE_DURATION, mVideoBufferedDuration / 1000.0); //TODO:mBufferUpdateRunnable
                     event.putDouble(EVENT_PROP_SEEKABLE_DURATION, mVideoDuration / 1000.0);
                     mEventEmitter.receiveEvent(getId(), Events.EVENT_PROGRESS.toString(), event);
@@ -270,7 +270,7 @@ public class ReactVideoView extends ScalableVideoView implements
         mVideoBufferedDuration = 0;
 
         initializeMediaPlayerIfNeeded();
-        mMediaPlayer.reset();
+        if (mMediaPlayer != null) mMediaPlayer.reset();
 
         try {
             if (isNetwork) {
@@ -395,11 +395,11 @@ public class ReactVideoView extends ScalableVideoView implements
         }
 
         if (mPaused) {
-            if (mMediaPlayer.isPlaying()) {
+            if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
                 pause();
             }
         } else {
-            if (!mMediaPlayer.isPlaying()) {
+            if (mMediaPlayer != null && !mMediaPlayer.isPlaying()) {
                 start();
                 // Setting the rate unpauses, so we have to wait for an unpause
                 if (mRate != mActiveRate) { 
@@ -428,7 +428,7 @@ public class ReactVideoView extends ScalableVideoView implements
             return;
         }
 
-        mMediaPlayer.setScreenOnWhilePlaying(mPreventsDisplaySleepDuringVideoPlayback);
+        if (mMediaPlayer != null) mMediaPlayer.setScreenOnWhilePlaying(mPreventsDisplaySleepDuringVideoPlayback);
         setKeepScreenOn(mPreventsDisplaySleepDuringVideoPlayback);
     }
 
@@ -478,7 +478,7 @@ public class ReactVideoView extends ScalableVideoView implements
                      * TODO: Call reset() then reinitialize the player
                      */
                     try {
-                        mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(rate));
+                        if (mMediaPlayer != null) mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(rate));
                         mActiveRate = rate;
                     } catch (Exception e) {
                         Log.e(ReactVideoViewManager.REACT_CLASS, "Unable to set rate, unsupported on this device");
@@ -551,14 +551,14 @@ public class ReactVideoView extends ScalableVideoView implements
         WritableMap naturalSize = Arguments.createMap();
         naturalSize.putInt(EVENT_PROP_WIDTH, mp.getVideoWidth());
         naturalSize.putInt(EVENT_PROP_HEIGHT, mp.getVideoHeight());
-        if (mp.getVideoWidth() > mp.getVideoHeight())
+        if (mp != null && mp.getVideoWidth() > mp.getVideoHeight())
             naturalSize.putString(EVENT_PROP_ORIENTATION, "landscape");
         else
             naturalSize.putString(EVENT_PROP_ORIENTATION, "portrait");
 
         WritableMap event = Arguments.createMap();
         event.putDouble(EVENT_PROP_DURATION, mVideoDuration / 1000.0);
-        event.putDouble(EVENT_PROP_CURRENT_TIME, mp.getCurrentPosition() / 1000.0);
+        if (mp != null) event.putDouble(EVENT_PROP_CURRENT_TIME, mp.getCurrentPosition() / 1000.0);
         event.putMap(EVENT_PROP_NATURALSIZE, naturalSize);
         // TODO: Actually check if you can.
         event.putBoolean(EVENT_PROP_FAST_FORWARD, true);
@@ -735,7 +735,7 @@ public class ReactVideoView extends ScalableVideoView implements
              *  so that when you return to the app the video is paused
              */
             mBackgroundPaused = true;
-            mMediaPlayer.pause();
+            if (mMediaPlayer != null) mMediaPlayer.pause();
         }
     }
 
