@@ -37,7 +37,7 @@ class VideoEventEmitter {
     private static final String EVENT_FULLSCREEN_DID_PRESENT = "onVideoFullscreenPlayerDidPresent";
     private static final String EVENT_FULLSCREEN_WILL_DISMISS = "onVideoFullscreenPlayerWillDismiss";
     private static final String EVENT_FULLSCREEN_DID_DISMISS = "onVideoFullscreenPlayerDidDismiss";
-    private static final String EVENT_CONTROL_VISIBILITY_CHANGE = "onControlVisibilityChange";
+    private static final String EVENT_CONTROL_VISIBILITY_CHANGE = "onControlsVisibilityChange";
 
     private static final String EVENT_STALLED = "onPlaybackStalled";
     private static final String EVENT_RESUME = "onPlaybackResume";
