@@ -237,7 +237,7 @@ class VideoEventEmitter {
     void controlsVisibilityChange(Boolean isVisible) {
         WritableMap event = Arguments.createMap();
         event.putBoolean(EVENT_PROP_CONTROL_VISIBILITY, isVisible);
-        receiveEvent(EVENT_FULLSCREEN_DID_DISMISS, event);
+        receiveEvent(EVENT_CONTROL_VISIBILITY_CHANGE, event);
     }
 
     void error(String errorString, Exception exception) {
