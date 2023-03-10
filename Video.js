@@ -170,6 +170,12 @@ export default class Video extends Component {
     }
   };
 
+  _onControlsVisibilityChange = (event) => {
+    if (this.props.onControlsVisibilityChange) {
+      this.props.onControlsVisibilityChange(event.nativeEvent);
+    }
+  }
+
   _onReadyForDisplay = (event) => {
     if (!this.props.audioOnly) {
       this._hidePoster();
@@ -320,6 +326,7 @@ export default class Video extends Component {
       onVideoFullscreenPlayerDidPresent: this._onFullscreenPlayerDidPresent,
       onVideoFullscreenPlayerWillDismiss: this._onFullscreenPlayerWillDismiss,
       onVideoFullscreenPlayerDidDismiss: this._onFullscreenPlayerDidDismiss,
+      onControlsVisibilityChange: this._onControlsVisibilityChange,
       onReadyForDisplay: this._onReadyForDisplay,
       onPlaybackStalled: this._onPlaybackStalled,
       onPlaybackResume: this._onPlaybackResume,
@@ -393,6 +400,7 @@ Video.propTypes = {
   onVideoFullscreenPlayerDidPresent: PropTypes.func,
   onVideoFullscreenPlayerWillDismiss: PropTypes.func,
   onVideoFullscreenPlayerDidDismiss: PropTypes.func,
+  onControlsVisibilityChange: PropTypes.func,
 
   /* Wrapper component */
   source: PropTypes.oneOfType([

@@ -37,6 +37,7 @@ class VideoEventEmitter {
     private static final String EVENT_FULLSCREEN_DID_PRESENT = "onVideoFullscreenPlayerDidPresent";
     private static final String EVENT_FULLSCREEN_WILL_DISMISS = "onVideoFullscreenPlayerWillDismiss";
     private static final String EVENT_FULLSCREEN_DID_DISMISS = "onVideoFullscreenPlayerDidDismiss";
+    private static final String EVENT_CONTROL_VISIBILITY_CHANGE = "onControlVisibilityChange";
 
     private static final String EVENT_STALLED = "onPlaybackStalled";
     private static final String EVENT_RESUME = "onPlaybackResume";
@@ -59,6 +60,7 @@ class VideoEventEmitter {
             EVENT_FULLSCREEN_DID_PRESENT,
             EVENT_FULLSCREEN_WILL_DISMISS,
             EVENT_FULLSCREEN_DID_DISMISS,
+            EVENT_CONTROL_VISIBILITY_CHANGE,
             EVENT_STALLED,
             EVENT_RESUME,
             EVENT_READY,
@@ -83,6 +85,7 @@ class VideoEventEmitter {
             EVENT_FULLSCREEN_DID_PRESENT,
             EVENT_FULLSCREEN_WILL_DISMISS,
             EVENT_FULLSCREEN_DID_DISMISS,
+            EVENT_CONTROL_VISIBILITY_CHANGE,
             EVENT_STALLED,
             EVENT_RESUME,
             EVENT_READY,
@@ -121,6 +124,7 @@ class VideoEventEmitter {
     private static final String EVENT_PROP_HAS_AUDIO_FOCUS = "hasAudioFocus";
     private static final String EVENT_PROP_IS_BUFFERING = "isBuffering";
     private static final String EVENT_PROP_PLAYBACK_RATE = "playbackRate";
+    private static final String EVENT_PROP_CONTROL_VISIBILITY = "isVisible";
 
     private static final String EVENT_PROP_ERROR = "error";
     private static final String EVENT_PROP_ERROR_STRING = "errorString";
@@ -128,7 +132,7 @@ class VideoEventEmitter {
 
     private static final String EVENT_PROP_TIMED_METADATA = "metadata";
 
-    private static final String EVENT_PROP_BITRATE = "bitrate";   
+    private static final String EVENT_PROP_BITRATE = "bitrate";
 
 
     void setViewId(int viewId) {
@@ -187,7 +191,7 @@ class VideoEventEmitter {
         event.putInt(EVENT_PROP_HEIGHT, height);
         event.putString(EVENT_PROP_TRACK_ID, id);
         receiveEvent(EVENT_BANDWIDTH, event);
-    }    
+    }
 
     void seek(long currentPosition, long seekTime) {
         WritableMap event = Arguments.createMap();
@@ -230,6 +234,12 @@ class VideoEventEmitter {
         receiveEvent(EVENT_FULLSCREEN_DID_DISMISS, null);
     }
 
+    void controlsVisibilityChange(Boolean isVisible) {
+        WritableMap event = Arguments.createMap();
+        event.putBoolean(EVENT_PROP_CONTROL_VISIBILITY, isVisible);
+        receiveEvent(EVENT_FULLSCREEN_DID_DISMISS, event);
+    }
+
     void error(String errorString, Exception exception) {
         WritableMap error = Arguments.createMap();
         error.putString(EVENT_PROP_ERROR_STRING, errorString);
@@ -249,7 +259,7 @@ class VideoEventEmitter {
         WritableArray metadataArray = Arguments.createArray();
 
         for (int i = 0; i < metadata.length(); i++) {
-            
+
             Metadata.Entry entry = metadata.get(i);
 
             if (entry instanceof Id3Frame) {
@@ -270,16 +280,16 @@ class VideoEventEmitter {
                 map.putString("value", value);
 
                 metadataArray.pushMap(map);
-                
+
             } else if (entry instanceof EventMessage) {
-                
+
                 EventMessage eventMessage = (EventMessage) entry;
-                
+
                 WritableMap map = Arguments.createMap();
                 map.putString("identifier", eventMessage.schemeIdUri);
                 map.putString("value", eventMessage.value);
                 metadataArray.pushMap(map);
-                
+
             }
         }
 
